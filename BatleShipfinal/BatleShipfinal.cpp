@@ -5,6 +5,7 @@
 #include<cstdlib>
 #include<ctime>
 #include <random>
+#pragma warning(disable: 4996)
 using namespace std;
 using namespace std;
 void ResetColor() { cout << "\033[0m"; }
@@ -25,13 +26,6 @@ int key_left = 75;
 int key_right = 77;
 int po = 0;
 
-void clearConsole() {
-#ifdef _WIN32
-	system("cls");
-#else
-	system("clear");
-#endif
-}
 
 bool rules(int x, int y, int(*arr)[10], int ship, int d) {
 	if (d == 1) {
@@ -720,24 +714,6 @@ void gamebeginhvsrr() {
 
 }
 
-void selection(int b) {
-	switch (b)
-	{
-	case 1:
-		gamebegin();
-		break;
-	case 2:
-		gamebeginrvsr();
-		break;
-	case 3:
-		gamebeginhvsrr();
-		break;
-	default:
-		break;
-	}
-
-
-}
 void gamebeginrvsr() {
 	int arrbotcreate1[10][10] = { 0 };
 	int arrbotcreate2[10][10] = { 0 };
@@ -841,7 +817,7 @@ void gamebeginrvsr() {
 	else
 		cout << "Machine 1 won!" << endl;
 	cout << endl << endl << "Are you done?" << endl << endl << "\033[33mPRESS ENTER TO END\033[0m";
-	delete dlenx1, dleny2 , dlenx2, dleny1;
+	delete dlenx1, dleny2, dlenx2, dleny1;
 	dlenx1 = nullptr;
 	dleny2 = nullptr;
 	dlenx2 = nullptr;
@@ -854,6 +830,25 @@ void gamebeginrvsr() {
 
 
 }
+void selection(int b) {
+	switch (b)
+	{
+	case 1:
+		gamebegin();
+		break;
+	case 2:
+		gamebeginrvsr();
+		break;
+	case 3:
+		gamebeginhvsrr();
+		break;
+	default:
+		break;
+	}
+
+
+}
+
 void menu() {
 
 	int i = 0;
