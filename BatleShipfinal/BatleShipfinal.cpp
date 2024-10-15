@@ -683,6 +683,39 @@ void gamebegin() {
 }
 
 
+void gamebeginhvsrr() {
+	int arrhumancreate[10][10] = { 0 };
+	int arrbotcreate[10][10] = { 0 };
+	botcreateboard(arrbotcreate);
+	botcreateboard(arrhumancreate);
+	clearConsole();
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arrhumancreate[i][j] > 0)
+				cout << "\033[32muu\033[0m";
+			else if (arrhumancreate[i][j] < 0) {
+				cout << "uu";
+			}
+
+
+			else
+				cout << "[]";
+		}
+		cout << endl;
+
+	}
+	cout << endl << "Continue? Press Enter";
+	while (true) {
+		int t = getch();
+		if (t == 13)
+			break;
+	}
+	goongame(arrhumancreate, arrbotcreate);
+
+}
+
 void selection(int b) {
 	switch (b)
 	{
