@@ -734,6 +734,117 @@ void selection(int b) {
 
 
 }
+void gamebeginrvsr() {
+	int arrbotcreate1[10][10] = { 0 };
+	int arrbotcreate2[10][10] = { 0 };
+	int leng = 0;
+	int* arr1 = new int[leng];
+	clearConsole();
+	botcreateboard(arrbotcreate1);
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arrbotcreate1[i][j] > 0)
+				cout << "\033[32muu\033[0m";
+			else if (arrbotcreate1[i][j] < 0) {
+				cout << "uu";
+			}
+
+
+			else
+				cout << "[]";
+		}
+		cout << endl;
+
+	}
+	cout << endl << "Continue? Press Enter\n\n";
+	while (true) {
+		int t = getch();
+		if (t == 13)
+			break;
+	}
+	botcreateboard(arrbotcreate2);
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arrbotcreate2[i][j] > 0)
+				cout << "\033[32muu\033[0m";
+			else if (arrbotcreate2[i][j] < 0) {
+				cout << "uu";
+			}
+
+
+			else
+				cout << "[]";
+		}
+		cout << endl;
+
+	}
+	cout << endl << "Continue? Press Enter to Begin Battle!";
+	while (true) {
+		int t = getch();
+		if (t == 13)
+			break;
+	}
+	clearConsole();
+	int arrguess[10][10] = { 0 };
+	int arrguess2[10][10] = { 0 };
+	int x1 = -1;
+	int y1 = -1;
+	int fx = 0;
+	int fy = 0;
+	int& fx_ref = fx;
+	int& fy_ref = fy;
+	int kol = 0;
+	int* dleny1 = new int(-1);
+	int* dlenx2 = new int(-1);
+	int* dleny2 = new int(-1);
+	int* dlenx1 = new int(-1);
+	int link = 0;
+	while (!(correct(arrguess, arrbotcreate1) || correct(arrguess2, arrbotcreate2)))
+	{
+
+		int y = 0;
+
+
+		do {
+			y = comparerobot(arrbotcreate2, arrguess, x1, y1, dlenx1, dleny1);
+			Sleep(50);
+			clearConsole();
+			boardcreatecomp(arrbotcreate1, arrguess2, arrguess, x1, y1);
+			cout << "Machine 1's turn" << endl;
+			cout << "\nTurn = " << ++link << endl;
+			cout << x1 << " : " << y1 << endl;
+		} while (arrguess[x1][y1] != 5);
+
+		do {
+			kol = comparerobot(arrbotcreate1, arrguess2, fx_ref, fy_ref, dlenx2, dleny2);
+			Sleep(50);
+			clearConsole();
+			boardcreatecomp(arrbotcreate1, arrguess2, arrguess, x1, y1);
+			cout << "Machine 2's turn" << endl;
+			cout << "\nTurn = " << ++link << endl;
+			cout << x1 << " : " << y1 << endl;
+
+		} while (arrguess2[fx][fy] != 5);
+
+
+	}
+	if (correct(arrguess, arrbotcreate1))
+		cout << "Machin 2 WON!!!" << endl;
+	else
+		cout << "Machine 1 won!" << endl;
+	cout << endl << endl << "Are you done?" << endl << endl << "\033[33mPRESS ENTER TO END\033[0m";
+	int win = 0;
+	do
+	{
+		win = getch();
+	} while (win != 13);
+
+
+}
 void menu() {
 
 	int i = 0;
