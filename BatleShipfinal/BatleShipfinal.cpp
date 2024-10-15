@@ -74,11 +74,13 @@ bool rules2(int x, int y, int d, int ship) {
 	return  b;
 }
 void board(int x, int y, int ship, int d, int(*arr)[10]) {
-
+	cout << "  0 1 2 3 4 5 6 7 8 9 ";
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
+			if (j == 0)
+				cout << i << "  ";
 			if (arr[i][j] > 0)
 				cout << "\033[32muu\033[0m";
 			else if (arr[i][j] < 0) {
@@ -530,12 +532,14 @@ int comparerobot(int(*arr)[10], int(*arrg)[10], int& xf, int& yf, int* xpoint, i
 }
 void boardcreatecomp(int(*arrO)[10], int(*arr1)[10], int(*arr2)[10], int x, int y) {
 	cout << "\033[31mPlayer 1\t\t\t\t\tPlayer 2\n\n\033[0m";
-
+	cout << "  0 1 2 3 4 5 6 7 8 9 \t\t\t\t   0 1 2 3 4 5 6 7 8 9 \n\n";
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-
+			if (j==0)
+				cout << i << "  ";
+			
 			if (arr1[i][j] == 5)
 				cout << "\033[34mxx\033[0m";
 			else if (arr1[i][j] == 8)
@@ -552,7 +556,8 @@ void boardcreatecomp(int(*arrO)[10], int(*arr1)[10], int(*arr2)[10], int x, int 
 		cout << "\t\t\t\t";
 		for (int j = 0; j < 10; j++)
 		{
-
+			if (j == 0)
+				cout << i << "  ";
 			if (arr2[i][j] == 5)
 				cout << "\033[34mxx\033[0m";
 			else if (arr2[i][j] < 0)
