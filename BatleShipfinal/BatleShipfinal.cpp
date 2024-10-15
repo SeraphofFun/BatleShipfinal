@@ -18,7 +18,52 @@ int key_down = 80;
 int key_left = 75;
 int key_right = 77;
 int po = 0;
+bool rules(int x, int y, int(*arr)[10], int ship, int d) {
+	if (d == 1) {
+		if (y + ship > 10) return false;
+	}
+	else {
+		if (x + ship > 10) return false;
+}
 
+	for (int i = 0; i < ship; i++) {
+		int currentX = (d == 1) ? x : x + i;
+		int currentY = (d == 1) ? y + i : y;
+
+		if (arr[currentX][currentY] == 1) return false;
+
+
+		for (int dx = -1; dx <= 1; dx++) {
+			for (int dy = -1; dy <= 1; dy++) {
+				int newX = currentX + dx;
+				int newY = currentY + dy;
+				if (newX >= 0 && newX < 10 && newY >= 0 && newY < 10) {
+					if (arr[newX][newY] > 0) return false;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+bool rules2(int x, int y, int d, int ship) {
+	bool b;
+	if (d == 1)
+	{
+		if (y + ship > 10)
+			b = false;
+		else
+			b = true;
+	}
+	else {
+		if (x + ship > 10)
+			b = false;
+		else
+			b = true;
+	}
+	return  b;
+}
 void clearConsole() {
 #ifdef _WIN32
 	system("cls");
@@ -26,6 +71,99 @@ void clearConsole() {
 	system("clear");
 #endif
 }
+void enteringship(int x, int y, int ship, int d, int(*arr)[10]) {
+
+	if (rules(x, y, arr, ship, d) && rules2(x, y, d, ship))
+	{
+		for (int i = 0; i < ship; i++)
+		{
+			if (d == 1)
+				arr[x][y + i] = ship + po * 10;
+
+			else
+				arr[x + i][y] = ship + po * 10;
+
+		}
+		po++;
+	}
+
+
+}
+void shipcordinates(int& x, int& y, int go, int ship, int& d, int(*arr)[10]) {
+
+	int tx = x;
+	int ty = y;
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arr[i][j] < 0)
+			{
+				arr[i][j] = 0;
+			}
+
+		}
+	}
+	switch (go)
+	{
+
+	case(72):
+		x--;
+		break;
+	case(80):
+		x++;
+		break;
+	case(75):
+		y--;
+		break;
+	case (77):
+		y++;
+		break;
+	case (13):
+		if (rules(x, y, arr, ship, d))
+			enteringship(tx, ty, ship, d, arr);
+		break;
+	case(32):
+		d == 1 ? d = 2 : d = 1;
+		break;
+	default:
+		break;
+	}
+	if (x >= 10)
+		x = 0;
+	if (y >= 10)
+		y = 0;
+	if (x < 0)
+		x = 9;
+	if (y < 0)
+		y = 9;
+
+	if (arr[tx][ty] <= 0)
+	{
+		arr[tx][ty] = 0;
+
+
+		for (int i = 0; i < ship; i++)
+		{
+			if (d == 1) {
+
+				if (arr[x][y + i] > 0)
+					break;
+				else
+					arr[x][y + i] = -1;
+			}
+
+			else {
+				if (arr[x + i][y] > 0)
+					break;
+				else
+					arr[x + i][y] = -1;
+			}
+		}
+	}
+
+}
+
 bool findelement(int num, int op, int(*arr)[10]) {
 	int l = 0;
 	for (int i = 0; i < 10; i++)
