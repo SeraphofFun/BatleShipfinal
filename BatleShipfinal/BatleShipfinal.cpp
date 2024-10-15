@@ -620,6 +620,10 @@ void sndpartofthegame(int(*arr)[10], int(*arr2)[10]) {
 		} while (arrguess2[fx][fy] != 5);
 
 	}
+	delete dlenx, dleny;
+	dlenx = nullptr;
+	dleny = nullptr;
+
 	if (correct(arrguess, arr))
 		cout << "HUMAN WON!!!" << endl;
 	else
@@ -837,6 +841,11 @@ void gamebeginrvsr() {
 	else
 		cout << "Machine 1 won!" << endl;
 	cout << endl << endl << "Are you done?" << endl << endl << "\033[33mPRESS ENTER TO END\033[0m";
+	delete dlenx1, dleny2 , dlenx2, dleny1;
+	dlenx1 = nullptr;
+	dleny2 = nullptr;
+	dlenx2 = nullptr;
+	dleny1 = nullptr;
 	int win = 0;
 	do
 	{
