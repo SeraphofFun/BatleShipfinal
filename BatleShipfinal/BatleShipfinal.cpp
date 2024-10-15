@@ -25,9 +25,63 @@ void clearConsole() {
 #else
 	system("clear");
 #endif
+}
+void menu() {
+
+	int i = 0;
+	bool select = false;
+	while (true)
+	{
+		po = 0;
+		int f = getch();
+
+		switch (f)
+		{
+		case (72):
+			i--;
+			break;
+		case (80):
+			i++;
+			break;
+		case (13):
+			selection(i);
+			break;
+		default:
+			break;
+		}
+		if (i == 0)
+		{
+			i = 3;
+		}
+		if (i == 4)
+			i = 1;
+		switch (i)
+		{
+		case(1):
+
+		default:
+
+
+
+
+			break;
+		}
+		clearConsole();
+		cout << "\033[34mBatle Ships!\033[0m\n\n";
+		cout << "\tBot Vs Human";
+		i == 1 && cout << "\033[32m<\033[0m";
+		cout << endl;
+		cout << "\tBot Vs Bot"; i == 2 && cout << "\033[32m<\033[0m";
+		cout << endl;
+		cout << "\tHuman VS Bot Random"; i == 3 && cout << "\033[32m<\033[0m";
+
+	}
+
+}
 
 int main()
 {
-    cout << "Hello World!\n";
+	menu();
+	return 0;
 }
 
