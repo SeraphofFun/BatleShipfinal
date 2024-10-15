@@ -24,6 +24,12 @@ int key_down = 80;
 int key_left = 75;
 int key_right = 77;
 int po = 0;
+enum selectship {
+	oneMship = 1,
+	twoMship,
+	threeMship,
+	fourMship
+};
 
 
 bool rules(int x, int y, int(*arr)[10], int ship, int d) {
@@ -308,80 +314,6 @@ bool findelement(int num, int op, int(*arr)[10]) {
 	else
 		return false;
 }
-void shipcordinates(int& x, int& y, int go, int ship, int& d, int(*arr)[10]) {
-
-	int tx = x;
-	int ty = y;
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (arr[i][j] < 0)
-			{
-				arr[i][j] = 0;
-			}
-
-		}
-	}
-	switch (go)
-	{
-
-	case(72):
-		x--;
-		break;
-	case(80):
-		x++;
-		break;
-	case(75):
-		y--;
-		break;
-	case (77):
-		y++;
-		break;
-	case (13):
-		if (rules(x, y, arr, ship, d))
-			enteringship(tx, ty, ship, d, arr);
-		break;
-	case(32):
-		d == 1 ? d = 2 : d = 1;
-		break;
-	default:
-		break;
-	}
-	if (x >= 10)
-		x = 0;
-	if (y >= 10)
-		y = 0;
-	if (x < 0)
-		x = 9;
-	if (y < 0)
-		y = 9;
-
-	if (arr[tx][ty] <= 0)
-	{
-		arr[tx][ty] = 0;
-
-
-		for (int i = 0; i < ship; i++)
-		{
-			if (d == 1) {
-
-				if (arr[x][y + i] > 0)
-					break;
-				else
-					arr[x][y + i] = -1;
-			}
-
-			else {
-				if (arr[x + i][y] > 0)
-					break;
-				else
-					arr[x + i][y] = -1;
-			}
-		}
-	}
-
-}
 void board(int x, int y, int ship, int d, int(*arr)[10]) {
 
 	for (int i = 0; i < 10; i++)
@@ -405,6 +337,72 @@ void board(int x, int y, int ship, int d, int(*arr)[10]) {
 
 
 
+
+
+}
+void sndpartofthegame(int(*arr)[10], int(*arr2)[10]) {
+	clearConsole();
+	int arrguess[10][10] = { 0 };
+	int arrguess2[10][10] = { 0 };
+	int x1 = 0;
+	int y1 = 0;
+	int x2 = 0;
+	int y2 = 0;
+	int fx = 0;
+	int fy = 0;
+	int& fx_ref = fx;
+	int& fy_ref = fy;
+	int kol = 0;
+	int link = 0;
+	int* dlenx = new int(-1);
+	int* dleny = new int(-1);
+	while (!(correct(arrguess, arr) || correct(arrguess2, arr2)))
+	{
+
+		int y = 0;
+
+		do {
+			y = comparehuman(arr2, arrguess, x1, y1);
+			clearConsole();
+			boardcreatecomp(arr, arrguess2, arrguess, x1, y1);
+			if (arrguess[x1][y1] == 5 && y == 13)
+				break;
+			cout << "Your turn" << endl;
+			cout << "\nTurn = " << ++link << endl << "Go = " << y << endl;
+		} while (true);
+		if (correct(arrguess, arr))
+			break;
+
+		do {
+			comparerobot(arr, arrguess2, fx_ref, fy_ref, dlenx, dleny);
+			clearConsole();
+			boardcreatecomp(arr, arrguess2, arrguess, x1, y1);
+			cout << "Machine turn" << endl;
+			cout << "\nTurn = " << link << endl << "Go = " << y << endl;
+
+		} while (arrguess2[fx][fy] != 5);
+
+	}
+	if (correct(arrguess, arr))
+		cout << "HUMAN WON!!!" << endl;
+	else
+		cout << "Machine won!" << endl;
+	cout << endl << endl << "Are you done?" << endl << endl << "\033[33mPRESS ENTER TO END\033[0m";
+	int win = 0;
+	do
+	{
+		win = getch();
+	} while (win != 13);
+
+
+}
+void goongame(int(*arr)[10], int(*arr2)[10]) {
+	cout << endl << endl << "Are you ready?" << endl << endl << "\033[33mPRESS ENTER\033[0m";
+
+	int i = getch();
+	if (i == 13) {
+		sndpartofthegame(arr, arr2);
+	}
 
 
 }
