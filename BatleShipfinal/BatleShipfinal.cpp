@@ -24,13 +24,14 @@ int key_down = 80;
 int key_left = 75;
 int key_right = 77;
 int po = 0;
-enum selectship {
-	oneMship = 1,
-	twoMship,
-	threeMship,
-	fourMship
-};
 
+void clearConsole() {
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+}
 
 bool rules(int x, int y, int(*arr)[10], int ship, int d) {
 	if (d == 1) {
@@ -38,7 +39,7 @@ bool rules(int x, int y, int(*arr)[10], int ship, int d) {
 	}
 	else {
 		if (x + ship > 10) return false;
-}
+	}
 
 	for (int i = 0; i < ship; i++) {
 		int currentX = (d == 1) ? x : x + i;
@@ -77,6 +78,144 @@ bool rules2(int x, int y, int d, int ship) {
 			b = true;
 	}
 	return  b;
+}
+void board(int x, int y, int ship, int d, int(*arr)[10]) {
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arr[i][j] > 0)
+				cout << "\033[32muu\033[0m";
+			else if (arr[i][j] < 0) {
+				cout << "uu";
+			}
+
+
+			else
+				cout << "[]";
+		}
+		cout << endl;
+
+	}
+
+
+
+
+
+
+}
+void enteringship(int x, int y, int ship, int d, int(*arr)[10]) {
+
+	if (rules(x, y, arr, ship, d) && rules2(x, y, d, ship))
+	{
+		for (int i = 0; i < ship; i++)
+		{
+			if (d == 1)
+				arr[x][y + i] = ship + po * 10;
+
+			else
+				arr[x + i][y] = ship + po * 10;
+
+		}
+		po++;
+	}
+
+
+}
+
+void shipcordinates(int& x, int& y, int go, int ship, int& d, int(*arr)[10]) {
+
+	int tx = x;
+	int ty = y;
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arr[i][j] < 0)
+			{
+				arr[i][j] = 0;
+			}
+
+		}
+	}
+	switch (go)
+	{
+
+	case(72):
+		x--;
+		break;
+	case(80):
+		x++;
+		break;
+	case(75):
+		y--;
+		break;
+	case (77):
+		y++;
+		break;
+	case (13):
+		if (rules(x, y, arr, ship, d))
+			enteringship(tx, ty, ship, d, arr);
+		break;
+	case(32):
+		d == 1 ? d = 2 : d = 1;
+		break;
+	default:
+		break;
+	}
+	if (x >= 10)
+		x = 0;
+	if (y >= 10)
+		y = 0;
+	if (x < 0)
+		x = 9;
+	if (y < 0)
+		y = 9;
+
+	if (arr[tx][ty] <= 0)
+	{
+		arr[tx][ty] = 0;
+
+
+		for (int i = 0; i < ship; i++)
+		{
+			if (d == 1) {
+
+				if (arr[x][y + i] > 0)
+					break;
+				else
+					arr[x][y + i] = -1;
+			}
+
+			else {
+				if (arr[x + i][y] > 0)
+					break;
+				else
+					arr[x + i][y] = -1;
+			}
+		}
+	}
+
+}
+bool findelement(int num, int op, int(*arr)[10]) {
+	int l = 0;
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arr[i][j] % 10 == num)
+			{
+				l++;
+			}
+
+		}
+
+	}
+	if (op * num == l)
+		return true;
+	else
+		return false;
 }
 
 void botcreateboard(int(*arr)[10]) {
@@ -202,35 +341,86 @@ void botcreateboard(int(*arr)[10]) {
 
 }
 
-void enteringship(int x, int y, int ship, int d, int(*arr)[10]) {
-
-	if (rules(x, y, arr, ship, d) && rules2(x, y, d, ship))
-	{
-		for (int i = 0; i < ship; i++)
-		{
-			if (d == 1)
-				arr[x][y + i] = ship + po * 10;
-
-			else
-				arr[x + i][y] = ship + po * 10;
-
-		}
-		po++;
-	}
-
-
-}
-void shipcordinates(int& x, int& y, int go, int ship, int& d, int(*arr)[10]) {
-
-	int tx = x;
-	int ty = y;
+enum selectship {
+	oneMship = 1,
+	twoMship,
+	threeMship,
+	fourMship
+};
+bool correct(int(*arr)[10], int(*arr2)[10]) {
+	int say = 0;
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			if (arr[i][j] < 0)
+			if ((arr[i][j] == 8 || arr[i][j] >= 1) && arr[i][j] != 5)
 			{
-				arr[i][j] = 0;
+				say++;
+			}
+
+		}
+
+	}
+	if (say == 20)
+		return true;
+	else
+		return false;
+}
+void comparer(int(*arrg)[10], int(*arr)[10], int x, int y) {
+	int ship = arr[x][y] % 10;
+	int chckguess = 0;
+	int chck = 0;
+	if (arr[x][y] % 10 > 1)
+	{
+		arrg[x][y] = arr[x][y];
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				if (arr[x][y] == arr[i][j])
+				{
+					chck++;
+				}
+				if (arr[x][y] == arrg[i][j])
+				{
+					chckguess++;
+				}
+
+			}
+
+		}
+		if (chck == chckguess)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				for (int j = 0; j < 10; j++)
+				{
+
+
+					if (arr[x][y] == arrg[i][j])
+					{
+						arrg[i][j] = 8;
+					}
+
+				}
+
+			}
+		}
+
+	}
+	else
+		arrg[x][y] = 8;
+
+}
+void shipguess(int& x, int& y, int go, int(*arrg)[10], int(*arr)[10]) {
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (arrg[i][j] < 0)
+			{
+				arrg[i][j] = 0;
 			}
 
 		}
@@ -251,15 +441,16 @@ void shipcordinates(int& x, int& y, int go, int ship, int& d, int(*arr)[10]) {
 		y++;
 		break;
 	case (13):
-		if (rules(x, y, arr, ship, d))
-			enteringship(tx, ty, ship, d, arr);
+		if (arr[x][y] == 0)
+			arrg[x][y] = 5;
+		else
+			comparer(arrg, arr, x, y);
 		break;
-	case(32):
-		d == 1 ? d = 2 : d = 1;
-		break;
+
 	default:
 		break;
 	}
+
 	if (x >= 10)
 		x = 0;
 	if (y >= 10)
@@ -268,75 +459,121 @@ void shipcordinates(int& x, int& y, int go, int ship, int& d, int(*arr)[10]) {
 		x = 9;
 	if (y < 0)
 		y = 9;
-
-	if (arr[tx][ty] <= 0)
-	{
-		arr[tx][ty] = 0;
+	if (!(arrg[x][y] > 0))
+		arrg[x][y] = -1;
 
 
-		for (int i = 0; i < ship; i++)
-		{
-			if (d == 1) {
+}
 
-				if (arr[x][y + i] > 0)
-					break;
-				else
-					arr[x][y + i] = -1;
-			}
+int comparehuman(int(*arr)[10], int(*arrg)[10], int& x, int& y) {
+	int go = getch();
+	shipguess(x, y, go, arrg, arr);
+	return go;
+}
 
+bool isValidMove(int x, int y, int(*arr)[10], int(*arrg)[10]) {
+	return x >= 0 && x < 10 && y >= 0 && y < 10 && arrg[x][y] == 0;
+}
+
+
+int comparerobot(int(*arr)[10], int(*arrg)[10], int& xf, int& yf, int* xpoint, int* ypoint) {
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distr(0, 9);
+
+	int b = 0;
+	int randomx = 0, randomy = 0;
+
+
+	if (*xpoint != -1 && *ypoint != -1) {
+		int x = *xpoint, y = *ypoint;
+
+		if (arrg[x][y] > 0 && arrg[x][y] != 8 && arrg[x][y] != 5) {
+			if (isValidMove(x + 1, y, arr, arrg)) { randomx = x + 1; randomy = y; }
+			else if (isValidMove(x - 1, y, arr, arrg)) { randomx = x - 1; randomy = y; }
+			else if (isValidMove(x, y + 1, arr, arrg)) { randomx = x; randomy = y + 1; }
+			else if (isValidMove(x, y - 1, arr, arrg)) { randomx = x; randomy = y - 1; }
 			else {
-				if (arr[x + i][y] > 0)
-					break;
-				else
-					arr[x + i][y] = -1;
+				do {
+					randomx = distr(gen);
+					randomy = distr(gen);
+				} while (arrg[randomx][randomy] != 0);
 			}
 		}
 	}
+	else {
+		do {
+			randomx = distr(gen);
+			randomy = distr(gen);
+		} while (arrg[randomx][randomy] != 0);
+	}
 
+	xf = randomx;
+	yf = randomy;
+
+	if (arr[randomx][randomy] > 0 && arrg[randomx][randomy] == 0) {
+		comparer(arrg, arr, randomx, randomy);
+
+		if (arrg[randomx][randomy] == 8) {
+			*xpoint = -1;
+			*ypoint = -1;
+		}
+		else if (arrg[randomx][randomy] > 0 && arrg[randomx][randomy] != 5) {
+			*xpoint = randomx;
+			*ypoint = randomy;
+		}
+		b = 1;
+	}
+	else if (arrg[randomx][randomy] > 0) {
+		b = 2;
+	}
+	else {
+		b = 0;
+		arrg[randomx][randomy] = 5;
+	}
+
+	return b;
 }
+void boardcreatecomp(int(*arrO)[10], int(*arr1)[10], int(*arr2)[10], int x, int y) {
+	cout << "\033[31mPlayer 1\t\t\t\t\tPlayer 2\n\n\033[0m";
 
-bool findelement(int num, int op, int(*arr)[10]) {
-	int l = 0;
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			if (arr[i][j] % 10 == num)
-			{
-				l++;
-			}
 
-		}
-
-	}
-	if (op * num == l)
-		return true;
-	else
-		return false;
-}
-void board(int x, int y, int ship, int d, int(*arr)[10]) {
-
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (arr[i][j] > 0)
+			if (arr1[i][j] == 5)
+				cout << "\033[34mxx\033[0m";
+			else if (arr1[i][j] == 8)
+				cout << "\033[35mux\033[0m";
+			else if (arr1[i][j] > 0)
 				cout << "\033[32muu\033[0m";
-			else if (arr[i][j] < 0) {
+			else if (arr1[i][j] < 0) {
 				cout << "uu";
 			}
 
+			else
+				cout << "[]";
+		}
+		cout << "\t\t\t\t";
+		for (int j = 0; j < 10; j++)
+		{
 
+			if (arr2[i][j] == 5)
+				cout << "\033[34mxx\033[0m";
+			else if (arr2[i][j] < 0)
+				cout << "\033[36m[]\033[0m";
+			else if (arr2[i][j] == 8)
+				cout << "\033[35mux\033[0m";
+			else if (arr2[i][j] > 1) {
+				cout << "\033[96mux\033[0m";
+			}
 			else
 				cout << "[]";
 		}
 		cout << endl;
 
 	}
-
-
-
-
 
 
 }
@@ -406,7 +643,6 @@ void goongame(int(*arr)[10], int(*arr2)[10]) {
 
 
 }
-
 void gamebegin() {
 	int arrhumancreate[10][10] = { 0 };
 	int arrbotcreate[10][10] = { 0 };
@@ -446,6 +682,7 @@ void gamebegin() {
 	goongame(arrhumancreate, arrbotcreate);
 }
 
+
 void selection(int b) {
 	switch (b)
 	{
@@ -464,7 +701,6 @@ void selection(int b) {
 
 
 }
-
 void menu() {
 
 	int i = 0;
@@ -517,6 +753,8 @@ void menu() {
 	}
 
 }
+
+
 
 int main()
 {
