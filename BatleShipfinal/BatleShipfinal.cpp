@@ -12,12 +12,20 @@ void SetColor(int textColor)
 {
 	cout << "\033[" << textColor << "m";
 }
-
+void clearConsole() {
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+}
 int key_up = 72;
 int key_down = 80;
 int key_left = 75;
 int key_right = 77;
 int po = 0;
+
+
 bool rules(int x, int y, int(*arr)[10], int ship, int d) {
 	if (d == 1) {
 		if (y + ship > 10) return false;
@@ -64,13 +72,130 @@ bool rules2(int x, int y, int d, int ship) {
 	}
 	return  b;
 }
-void clearConsole() {
-#ifdef _WIN32
-	system("cls");
-#else
-	system("clear");
-#endif
+
+void botcreateboard(int(*arr)[10]) {
+	srand(unsigned int(time(NULL)));
+
+	int max = 10;
+	int d;
+	int ship;
+	int randomx = 0;
+	int randomy = 0;
+	int po = 0;
+	for (int i = 0; i < 1;)
+	{
+		ship = 4;
+		d = 1 + rand() % (2);
+		if (d == 1)
+		{
+			int max_index = 10 - ship;
+			randomy = rand() % (max_index + 1);
+			randomx = rand() % (max);
+
+		}
+		else
+		{
+			int max_index = 10 - ship;
+			randomy = rand() % (max);
+			randomx = rand() % (max_index + 1);
+
+		}
+		if (rules(randomx, randomy, arr, 4, d) && rules2(randomx, randomy, d, ship)) {
+
+			for (int j = 0; j < ship; j++)
+			{
+				if (d == 1)
+					arr[randomx][randomy + j] = ship + po * 10;
+				else
+					arr[randomx + j][randomy] = ship + po * 10;
+			}
+
+			i++;
+		}
+	}
+	for (int i = 0; i < 2; )
+	{
+		ship = 3;
+		d = 1 + rand() % (2);
+		if (d == 1)
+		{
+			int max_index = 10 - ship;
+			randomy = rand() % (max_index + 1);
+			randomx = rand() % (max);
+
+		}
+		else
+		{
+			int max_index = 10 - ship;
+			randomy = rand() % (max);
+			randomx = rand() % (max_index + 1);
+
+		}
+		if (rules(randomx, randomy, arr, 3, d) && rules2(randomx, randomy, d, ship)) {
+
+			for (int j = 0; j < ship; j++)
+			{
+				if (d == 1)
+					arr[randomx][randomy + j] = ship + po * 10;
+				else if (randomx + j < 10)
+					arr[randomx + j][randomy] = ship + po * 10;
+			}
+			i++;
+			po++;
+
+		}
+	}
+
+
+	for (int i = 0; i < 4; )
+	{
+
+		ship = 1;
+		randomy = rand() % max;
+		randomx = rand() % max;
+		d = 1;
+		if (rules(randomx, randomy, arr, 1, d) && rules2(randomx, randomy, d, ship)) {
+			arr[randomx][randomy] = ship + po * 10;
+			i++;
+			po++;
+		}
+	}
+	for (int i = 0; i < 3; )
+	{
+
+		ship = 2;
+		d = 1 + rand() % (2);
+		if (d == 1)
+		{
+			int max_index = 10 - ship;
+			randomy = rand() % (max_index + 1);
+			randomx = rand() % (max);
+
+		}
+		else
+		{
+			int max_index = 10 - ship;
+			randomy = rand() % (max);
+			randomx = rand() % (max_index + 1);
+
+		}
+
+		if (rules(randomx, randomy, arr, ship, d) && rules2(randomx, randomy, d, ship)) {
+
+			for (int j = 0; j < ship; j++)
+			{
+				if (d == 1)
+					arr[randomx][randomy + j] = ship + po * 10;
+				else
+					arr[randomx + j][randomy] = ship + po * 10;
+			}
+			i++;
+			po++;
+		}
+	}
+
 }
+
 void enteringship(int x, int y, int ship, int d, int(*arr)[10]) {
 
 	if (rules(x, y, arr, ship, d) && rules2(x, y, d, ship))
